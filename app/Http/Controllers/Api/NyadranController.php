@@ -40,31 +40,35 @@ class NyadranController extends Controller
      */
     public function store(Request $request)
     {
-        //return $this->ok($request->data['data'],"Success");
-        try{
-            DB::beginTransaction();
-            $sender = Sender::create([
-                'name' => $request->data['name'],
-                'phone' => $request->data['phone'],
-                'address' => $request->data['address']
-            ]);
-            $arwahs = $request->data;
-            $senderId = $sender->id;
-            foreach($arwahs['data'] as $arwah){
-                Arwah::create([
-                    "sender_id" => $senderId,
-                    "arwah_name" => $arwah['arwah_name'],
-                    "arwah_address" => $arwah['arwah_address'],
-                    "arwah_type" => $arwah['arwah_type'],
+        if(auth()->user()->hasAnyRole(['Super Admin','Admin','Officer'])){
+            try{
+                DB::beginTransaction();
+                $sender = Sender::create([
+                    'name' => $request->data['name'],
+                    'phone' => $request->data['phone'],
+                    'address' => $request->data['address']
                 ]);
+                $arwahs = $request->data;
+                $senderId = $sender->id;
+                foreach($arwahs['data'] as $arwah){
+                    Arwah::create([
+                        "sender_id" => $senderId,
+                        "arwah_name" => $arwah['arwah_name'],
+                        "arwah_address" => $arwah['arwah_address'],
+                        "arwah_type" => $arwah['arwah_type'],
+                    ]);
+                }
+                $data = Sender::find($senderId)->with('arwahs')->get();
+            }catch(\Throwable $th){
+                DB::rollBack();
+                return $this->error($th);
             }
-            $data = Sender::find($senderId)->with('arwahs')->get();
-        }catch(\Throwable $th){
-            DB::rollBack();
-            return $this->error($th);
+            DB::commit();
+            return $this->ok($data,"Success");
+        }else {
+            return $this->error("Not Authorized");
         }
-        DB::commit();
-        return $this->ok($data,"Success");
+        //return $this->ok($request->data['data'],"Success")   
     }
 
     /**

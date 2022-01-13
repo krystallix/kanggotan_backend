@@ -21,10 +21,17 @@ Route::group(['namespace' => '\App\Http\Controllers\Api'], function () {
     Route::group(['prefix' => 'nyadran'], function () {
         Route::get('/all', 'NyadranController@index');
         Route::get('/show/{id}', 'NyadranController@show');
-        Route::post('/store', 'NyadranController@store');
         Route::post('/search', 'NyadranController@search');
+        Route::group(['middleware' => ['auth:sanctum']], function () {
+            Route::group(['middleware' => ['role:Admin|Super Admin|Officer']], function () {
+                Route::post('/store', 'NyadranController@store');
+            });
+        });
     });
 });
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-    return $request->user();
+    return [
+        "user" => $request->user(),
+        "roles" => $request->user()->roles
+    ];
 });

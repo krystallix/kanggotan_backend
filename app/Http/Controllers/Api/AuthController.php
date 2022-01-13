@@ -47,6 +47,7 @@ class AuthController extends Controller
                 'email' => $request->get('email'),
                 'phone' => $request->get('phone'),
                 'password' => Hash::make($request->get('password')),
+                'status' => 'ACTIVE'
             ]);
             //return json_encode($user);
             $user->assignRole('User');
