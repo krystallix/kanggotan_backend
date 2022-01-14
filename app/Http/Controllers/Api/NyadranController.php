@@ -124,4 +124,13 @@ class NyadranController extends Controller
         $senders = Sender::where('name',$request->name)->with('arwahs')->get();
         return $this->ok($senders, 'Success');
     }
+
+    public function stats() {
+        $senders = Sender::count();
+        $arwahs  = Arwah::count();
+        return $this->ok([
+            'total_sender' => $senders,
+            'total_arwah' => $arwahs
+        ],'Success');
+    }
 }

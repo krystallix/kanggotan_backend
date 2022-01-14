@@ -19,6 +19,7 @@ Route::group(['namespace' => '\App\Http\Controllers\Api'], function () {
         Route::post('/register', 'AuthController@register');
     });
     Route::group(['prefix' => 'nyadran'], function () {
+        Route::get('/statistik', 'NyadranController@stats');
         Route::get('/all', 'NyadranController@index');
         Route::get('/show/{id}', 'NyadranController@show');
         Route::post('/search', 'NyadranController@search');
