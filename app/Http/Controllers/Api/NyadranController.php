@@ -16,9 +16,9 @@ class NyadranController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        $nyadrans = Sender::with('arwahs')->get();
+        $nyadrans = Sender::with('arwahs')->paginate($request->get('per_page', 15))->withQueryString();
         return $this->ok($nyadrans, "Success");
     }
 
@@ -121,7 +121,7 @@ class NyadranController extends Controller
     }
 
     public function search(Request $request){
-        $senders = Sender::where('name',$request->name)->with('arwahs')->get();
+        $senders = Sender::where('name','like', "%".$request->name."%")->with('arwahs')->get();
         return $this->ok($senders, 'Success');
     }
 

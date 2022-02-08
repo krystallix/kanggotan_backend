@@ -36,3 +36,4 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
         "roles" => $request->user()->roles
     ];
 });
+Route::get('/admin', [AdminController::class, 'index'])->name('admin.index');
