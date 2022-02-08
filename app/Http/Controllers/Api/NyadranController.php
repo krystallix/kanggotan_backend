@@ -8,6 +8,9 @@ use App\Models\Sender;
 use App\Models\Arwah;
 use Illuminate\Support\Facades\DB;
 use App\Http\Requests\Api\NyadranRequest;
+use App\Exports\HaulExport;
+use Maatwebsite\Excel\Facades\Excel;
+use Carbon\Carbon;
 
 class NyadranController extends Controller
 {
@@ -132,5 +135,10 @@ class NyadranController extends Controller
             'total_sender' => $senders,
             'total_arwah' => $arwahs
         ],'Success');
+    }
+
+    public function export(){
+        $nameFile = Carbon::now()->toDateTimeString() .'-Haul-2022.xlsx';
+        return Excel::download(new HaulExport, $nameFile);
     }
 }

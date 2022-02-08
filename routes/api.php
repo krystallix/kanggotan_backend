@@ -21,6 +21,7 @@ Route::group(['namespace' => '\App\Http\Controllers\Api'], function () {
     Route::group(['prefix' => 'nyadran'], function () {
         Route::get('/statistik', 'NyadranController@stats');
         Route::get('/all', 'NyadranController@index');
+        Route::get('/export', 'NyadranController@export');
         Route::get('/show/{id}', 'NyadranController@show');
         Route::post('/search', 'NyadranController@search');
         Route::group(['middleware' => ['auth:sanctum']], function () {
