@@ -27,6 +27,10 @@ Route::group(['namespace' => '\App\Http\Controllers\Api'], function () {
         Route::group(['middleware' => ['auth:sanctum']], function () {
             Route::group(['middleware' => ['role:Admin|Super Admin|Officer']], function () {
                 Route::post('/store', 'NyadranController@store');
+                Route::post('/arwah/{sender}/new', 'NyadranController@addArwah');
+                Route::delete('/arwah/{arwah}/delete', 'NyadranController@destroyArwah');
+                Route::put('/arwah/{arwah}/edit', 'NyadranController@editArwah');
+                Route::delete('/sender/{sender}/delete', 'NyadranController@destroySender');
             });
         });
     });

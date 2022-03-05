@@ -41,6 +41,45 @@ class NyadranController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
+    public function addArwah(Sender $sender, Request $request) {
+        if(auth()->user()->hasAnyRole(['Super Admin','Admin','Officer'])){
+            foreach($request->all() as $arwah){        
+                     Arwah::create([
+                        "sender_id" => $sender->id,
+                        "arwah_name" => $arwah['arwah_name'],
+                        "arwah_address" => $arwah['arwah_address'],
+                        "arwah_type" => $arwah['arwah_type'],
+                    ]);
+            }
+            return $this->ok($sender->with('arwahs')->first(),"Success");
+            // try{
+            //     DB::beginTransaction();
+            //     $sender = Sender::create([
+            //         'name' => $request->data['name'],
+            //         'phone' => $request->data['phone'],
+            //         'address' => $request->data['address']
+            //     ]);
+            //     $arwahs = $request->data;
+            //     $senderId = $sender->id;
+            //     foreach($arwahs['data'] as $arwah){
+            //         Arwah::create([
+            //             "sender_id" => $senderId,
+            //             "arwah_name" => $arwah['arwah_name'],
+            //             "arwah_address" => $arwah['arwah_address'],
+            //             "arwah_type" => $arwah['arwah_type'],
+            //         ]);
+            //     }
+            //     $data = Sender::find($senderId)->with('arwahs')->get();
+            // }catch(\Throwable $th){
+            //     DB::rollBack();
+            //     return $this->error($th);
+            // }
+            // DB::commit();
+            // return $this->ok($data,"Success");
+        }else {
+            return $this->error("Not Authorized");
+        }
+    }
     public function store(Request $request)
     {
         if(auth()->user()->hasAnyRole(['Super Admin','Admin','Officer'])){
@@ -82,11 +121,11 @@ class NyadranController extends Controller
      */
     public function show($id)
     {
-        $senders = Sender::find($id);
-        if(!$senders){
+        $sender = Sender::findOrFail($id)->with('arwahs')->first();
+        if($sender == null){
             return $this->error("Tidak Ditemukan");   
         }
-        return $this->ok($senders->with('arwahs')->get(), 'Success');
+        return $this->ok($sender, 'Success');
     }
 
     /**
@@ -111,16 +150,26 @@ class NyadranController extends Controller
     {
         //
     }
-
     /**
      * Remove the specified resource from storage.
      *
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroyArwah(Arwah $arwah)
     {
-        //
+        $arwah->delete();
+        return $this->ok('','Success');
+    }
+    public function editArwah(Arwah $arwah, Request $request)
+    {
+        $arwah->update($request->all());
+        return $this->ok($arwah,'Success');
+    }
+    public function destroySender(Sender $sender)
+    {
+        $sender->delete();
+        return $this->ok('','Success');
     }
 
     public function search(Request $request){
