@@ -100,7 +100,7 @@ class NyadranController extends Controller
                         "arwah_type" => $arwah['arwah_type'],
                     ]);
                 }
-                $data = Sender::find($senderId)->with('arwahs')->get();
+                $data = Sender::find($senderId)->with('arwahs')->first()->get();
             }catch(\Throwable $th){
                 DB::rollBack();
                 return $this->error($th);
