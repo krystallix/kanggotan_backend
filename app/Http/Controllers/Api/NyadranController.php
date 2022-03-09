@@ -190,4 +190,15 @@ class NyadranController extends Controller
         $nameFile = Carbon::now()->toDateTimeString() .'-Haul-2022.xlsx';
         return Excel::download(new HaulExport, $nameFile);
     }
+
+    public function addresses(){
+        $address = Arwah::distinct()->get(['arwah_address']);
+
+        return $this->ok($address, 'Success');
+    }
+    public function arwahs(){
+        $address = Arwah::distinct()->get(['arwah_name']);
+
+        return $this->ok($address, 'Success');
+    }
 }
