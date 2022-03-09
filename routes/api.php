@@ -21,11 +21,16 @@ Route::group(['namespace' => '\App\Http\Controllers\Api'], function () {
     Route::group(['prefix' => 'nyadran'], function () {
         Route::get('/statistik', 'NyadranController@stats');
         Route::get('/all', 'NyadranController@index');
+        Route::get('/export', 'NyadranController@export');
         Route::get('/show/{id}', 'NyadranController@show');
         Route::post('/search', 'NyadranController@search');
         Route::group(['middleware' => ['auth:sanctum']], function () {
             Route::group(['middleware' => ['role:Admin|Super Admin|Officer']], function () {
                 Route::post('/store', 'NyadranController@store');
+                Route::post('/arwah/{sender}/new', 'NyadranController@addArwah');
+                Route::delete('/arwah/{arwah}/delete', 'NyadranController@destroyArwah');
+                Route::put('/arwah/{arwah}/edit', 'NyadranController@editArwah');
+                Route::delete('/sender/{sender}/delete', 'NyadranController@destroySender');
             });
         });
     });
@@ -36,3 +41,4 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
         "roles" => $request->user()->roles
     ];
 });
+Route::get('/admin', [AdminController::class, 'index'])->name('admin.index');
