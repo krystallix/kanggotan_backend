@@ -24,8 +24,11 @@ Route::group(['namespace' => '\App\Http\Controllers\Api'], function () {
         Route::get('/export', 'NyadranController@export');
         Route::get('/show/{id}', 'NyadranController@show');
         Route::post('/search', 'NyadranController@search');
+        Route::get('/address', 'NyadranController@addresses');
+        Route::get('/name/arwahs', 'NyadranController@arwahs');
         Route::group(['middleware' => ['auth:sanctum']], function () {
             Route::group(['middleware' => ['role:Admin|Super Admin|Officer']], function () {
+               
                 Route::post('/store', 'NyadranController@store');
                 Route::post('/arwah/{sender}/new', 'NyadranController@addArwah');
                 Route::delete('/arwah/{arwah}/delete', 'NyadranController@destroyArwah');
