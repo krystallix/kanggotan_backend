@@ -171,6 +171,11 @@ class NyadranController extends Controller
         $sender->delete();
         return $this->ok('','Success');
     }
+    public function editSender(Sender $sender, Request $request)
+    {
+        $sender->update($request->all());
+        return $this->ok($sender,'Success');
+    }
 
     public function search(Request $request){
         $senders = Sender::where('name','like', "%".$request->name."%")->with('arwahs')->get();
