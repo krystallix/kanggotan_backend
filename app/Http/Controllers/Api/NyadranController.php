@@ -11,6 +11,7 @@ use App\Http\Requests\Api\NyadranRequest;
 use App\Exports\HaulExport;
 use Maatwebsite\Excel\Facades\Excel;
 use Carbon\Carbon;
+use App\Models\Log;
 
 class NyadranController extends Controller
 {
@@ -51,7 +52,9 @@ class NyadranController extends Controller
                         "arwah_type" => $arwah['arwah_type'],
                     ]);
             }
-            return $this->ok($sender->with('arwahs')->first(),"Success");
+            $senderOk = Sender::where('id', $sender->id)->with('arwahs')->get();
+            $this->logging("Add Arwah by Sender", $sender->arwahs);
+            return $this->ok($sender,"Success");
             // try{
             //     DB::beginTransaction();
             //     $sender = Sender::create([
@@ -100,12 +103,13 @@ class NyadranController extends Controller
                         "arwah_type" => $arwah['arwah_type'],
                     ]);
                 }
-                $data = Sender::find($senderId)->with('arwahs')->first()->get();
+                $data = Sender::where('id', $senderId)->with('arwahs')->first();
             }catch(\Throwable $th){
                 DB::rollBack();
                 return $this->error($th);
             }
             DB::commit();
+            $this->logging("Create Arwah", $data);
             return $this->ok($data,"Success");
         }else {
             return $this->error("Not Authorized");
@@ -159,21 +163,25 @@ class NyadranController extends Controller
     public function destroyArwah(Arwah $arwah)
     {
         $arwah->delete();
+        $this->logging("Destroy Arwah", $arwah);
         return $this->ok('','Success');
     }
     public function editArwah(Arwah $arwah, Request $request)
     {
         $arwah->update($request->all());
+        $this->logging("Edit Arwah", $arwah);
         return $this->ok($arwah,'Success');
     }
     public function destroySender(Sender $sender)
     {
         $sender->delete();
+        $this->logging("Destroy Sender", $sender);
         return $this->ok('','Success');
     }
     public function editSender(Sender $sender, Request $request)
     {
         $sender->update($request->all());
+        $this->logging("Edit Sender", $sender);
         return $this->ok($sender,'Success');
     }
 
@@ -205,5 +213,18 @@ class NyadranController extends Controller
         $address = Arwah::distinct()->get(['arwah_name']);
 
         return $this->ok($address, 'Success');
+    }
+
+    public function logging($action, $data){
+        $createLog = Log::create([
+            'user' => auth()->user()->name,
+            'action' => $action,
+            'data' => $data
+        ]);
+        return $createLog;
+    }
+    public function logIndex(){
+        $log = Log::all();
+        return $this->ok($log, 'Success');
     }
 }
