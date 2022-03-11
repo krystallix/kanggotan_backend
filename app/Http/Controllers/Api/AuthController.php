@@ -13,7 +13,7 @@ class AuthController extends Controller
 {
     public function login(LoginRequest $request)
     {
-        $user = User::where('email', $request->email)->first();
+        $user = User::where('email', $request->email)->with('roles')->first();
 
         if (! $user) {
             return $this->error('Akun tidak ditemukan', 422, ['email' => ['Akun tidak ditemukan']]);
