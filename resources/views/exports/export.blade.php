@@ -3,6 +3,7 @@
         <th>No</th>
         <th>Pengirim</th>
         <th>Alamat</th>
+        <th>No</th>
         <th>Arwah</th>
         <th>Makam</th>
     </tr>
@@ -33,6 +34,7 @@
                     <td>&nbsp;</td>
                     <td>&nbsp;</td>
                     <td>&nbsp;</td>
+                    <td>{{ $loop->iteration}}</td>
                     <td>{{ $arwah_type . ' ' . $item->arwah_name }}</td>
                     <td>{{ $item->arwah_address }}</td>
                 </tr>
