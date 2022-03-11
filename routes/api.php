@@ -32,6 +32,7 @@ Route::group(['namespace' => '\App\Http\Controllers\Api'], function () {
                 Route::post('/arwah/{sender}/new', 'NyadranController@addArwah');
                 Route::delete('/arwah/{arwah}/delete', 'NyadranController@destroyArwah');
                 Route::put('/arwah/{arwah}/edit', 'NyadranController@editArwah');
+                Route::put('/sender/{sender}/edit', 'NyadranController@editSender');
                 Route::delete('/sender/{sender}/delete', 'NyadranController@destroySender');
             });
         });
