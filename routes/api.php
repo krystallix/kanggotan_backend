@@ -28,7 +28,6 @@ Route::group(['namespace' => '\App\Http\Controllers\Api'], function () {
         Route::get('/name/arwahs', 'NyadranController@arwahs');
         Route::group(['middleware' => ['auth:sanctum']], function () {
             Route::group(['middleware' => ['role:Admin|Super Admin|Officer']], function () {
-               
                 Route::post('/store', 'NyadranController@store');
                 Route::post('/arwah/{sender}/new', 'NyadranController@addArwah');
                 Route::delete('/arwah/{arwah}/delete', 'NyadranController@destroyArwah');
@@ -37,6 +36,17 @@ Route::group(['namespace' => '\App\Http\Controllers\Api'], function () {
             });
         });
     });
+    Route::group(['prefix' => 'admin'], function () {
+        Route::group(['middleware' => ['auth:sanctum']], function () {
+            Route::group(['middleware' => ['role:Admin|Super Admin']], function () {
+                Route::get('/roles','UserController@roles');
+                Route::get('/users','UserController@index');
+                Route::post('/users/store', 'UserController@createUser');
+                Route::delete('/users/{id}/delete', 'UserController@deleteUser');
+            });
+        });
+    });
+    
 });
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return [
