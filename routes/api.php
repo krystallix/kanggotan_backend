@@ -40,6 +40,7 @@ Route::group(['namespace' => '\App\Http\Controllers\Api'], function () {
     Route::group(['prefix' => 'admin'], function () {
         Route::group(['middleware' => ['auth:sanctum']], function () {
             Route::group(['middleware' => ['role:Admin|Super Admin']], function () {
+                Route::get('/logs','NyadranController@logIndex');
                 Route::get('/roles','UserController@roles');
                 Route::get('/users','UserController@index');
                 Route::post('/users/store', 'UserController@createUser');
