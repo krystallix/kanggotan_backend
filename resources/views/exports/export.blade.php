@@ -26,6 +26,7 @@
                     <td>{{ $nomer }}</td>
                     <td>{{ $haul->name }}</td>
                     <td>{{ $haul->address }}</td>
+                    <td>{{$loop->iteration}}</td>
                     <td>{{ $arwah_type . ' ' . $item->arwah_name }}</td>
                     <td>{{ $item->arwah_address }}</td>
                 </tr>
