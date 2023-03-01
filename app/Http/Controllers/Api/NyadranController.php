@@ -22,7 +22,7 @@ class NyadranController extends Controller
      */
     public function index(Request $request)
     {
-        $nyadrans = Sender::with('arwahs')->paginate($request->get('per_page', 15))->withQueryString();
+        $nyadrans = Sender::with('arwahs')->whereYear('created_at', $request->get('year'))->paginate($request->get('per_page', 15))->withQueryString();
         return $this->ok($nyadrans, "Success");
     }
 
@@ -186,13 +186,13 @@ class NyadranController extends Controller
     }
 
     public function search(Request $request){
-        $senders = Sender::where('name','like', "%".$request->name."%")->with('arwahs')->get();
+        $senders = Sender::where('name','like', "%".$request->name."%")->whereYear('created_at', $request->get('year'))->with('arwahs')->get();
         return $this->ok($senders, 'Success');
     }
 
-    public function stats() {
-        $senders = Sender::count();
-        $arwahs  = Arwah::count();
+    public function stats(Request $request) {
+        $senders = Sender::whereYear('created_at', $request->get('year'))->count();
+        $arwahs  = Arwah::whereYear('created_at', $request->get('year'))->count();
         return $this->ok([
             'total_sender' => $senders,
             'total_arwah' => $arwahs
@@ -200,7 +200,7 @@ class NyadranController extends Controller
     }
 
     public function export(){
-        $nameFile = Carbon::now()->toDateTimeString() .'-Haul-2022.xlsx';
+        $nameFile = Carbon::now()->toDateTimeString() .'-Haul.xlsx';
         return Excel::download(new HaulExport, $nameFile);
     }
 

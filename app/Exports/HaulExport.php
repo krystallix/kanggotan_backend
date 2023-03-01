@@ -18,7 +18,7 @@ class HaulExport implements FromView
     public function view(): View
     {
         return view('exports.export', [
-            'hauls' => Sender::with('arwahs')->get()
+            'hauls' => Sender::whereYear('created_at', $request->get('year'))->with('arwahs')->get()
         ]);
     }
 }
