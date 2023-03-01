@@ -4,6 +4,7 @@ namespace App\Exports;
 
 use App\Models\Sender;
 use Illuminate\Contracts\View\View;
+use Illuminate\Http\Request;
 use Maatwebsite\Excel\Concerns\FromView;
 
 class HaulExport implements FromView
@@ -18,7 +19,7 @@ class HaulExport implements FromView
     public function view(): View
     {
         return view('exports.export', [
-            'hauls' => Sender::whereYear('created_at', $request->get('year'))->with('arwahs')->get()
+            'hauls' => Sender::whereYear('created_at', 2023)->with('arwahs')->get()
         ]);
     }
 }
