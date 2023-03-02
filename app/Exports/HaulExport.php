@@ -16,10 +16,12 @@ class HaulExport implements FromView
     // {
     //     return Sender::with('arwahs')->get();
     // }
-    public function view(): View
+
+    public function view(Request $request): View
     {
         return view('exports.export', [
-            'hauls' => Sender::whereYear('created_at', 2023)->with('arwahs')->get()
+            'hauls' => Sender::whereYear('created_at', $request->get('year'))->with('arwahs')->get()
+
         ]);
     }
 }
